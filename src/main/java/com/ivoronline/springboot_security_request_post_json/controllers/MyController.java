@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MyController {
 
   @Autowired AuthenticationManager authenticationManager;
-  @Autowired private UserDetailsService userDetailsService;
 
   //========================================================================
   // AUTHENTICATE
