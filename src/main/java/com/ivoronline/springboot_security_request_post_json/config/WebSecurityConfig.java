@@ -14,9 +14,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  //=================================================================
+  // AUTHENTICATION MANAGER
+  //=================================================================
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
   //=================================================================
   // USER DETAILS SERVICE
@@ -25,12 +33,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected UserDetailsService userDetailsService() {
 
+    //CREATE USER
     UserDetails user = User.withDefaultPasswordEncoder()
       .username("myuser")
       .password("mypassword")
       .roles   ("USER")
       .build();
 
+    //STORE USER
     return new InMemoryUserDetailsManager(user);
 
   }
@@ -41,16 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity.authorizeRequests().antMatchers("/Authenticate").permitAll(); //ANONYMOUS ACCESS
-    httpSecurity.csrf().disable(); //Otherwise POST to Authenticate fails
-  }
-
-  //=================================================================
-  // AUTHENTICATION MANAGER BEAN
-  //=================================================================
-  @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
+    httpSecurity.csrf().disable();                                             //ENABLE POST TO AUTHENTICATE
   }
 
 }
